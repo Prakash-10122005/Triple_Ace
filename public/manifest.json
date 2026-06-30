@@ -1,0 +1,29 @@
+{
+  "background_color": "#000000",
+  "dir": "ltr",
+  "display": "fullscreen",
+  "name": "Triple_Ace",
+  "orientation": "portrait",
+  "scope": "/",
+  "short_name": "Triple_Ace",
+  "start_url": "/",
+  "theme_color": "#585858",
+  "description": "The card game named as triple ace",
+  "id": "Prakash.MyCardGame",
+  "lang": "en",
+  "categories": [
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

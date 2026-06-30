@@ -605,6 +605,67 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
 .srow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px;color:rgba(255,255,255,.5);}
 .srow:last-child{border:none;}.srow .rnk{color:var(--gold);font-weight:700;width:24px;font-family:'Cinzel',serif;}
 
+
+/* ══════════════════════════════════════
+   MODE SELECT SCREEN
+══════════════════════════════════════ */
+#mode-select{
+  position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:28px;background:radial-gradient(ellipse at 50% 35%,#1e5c34 0%,#0e2a18 100%);z-index:210;
+}
+.mode-hero{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.mode-logo{font-family:'Cinzel',serif;font-size:50px;font-weight:900;color:transparent;
+  background:linear-gradient(135deg,#9a7430 0%,#e8c96b 30%,#f5e09a 50%,#e8c96b 70%,#9a7430 100%);
+  -webkit-background-clip:text;background-clip:text;letter-spacing:8px;
+  filter:drop-shadow(0 0 30px rgba(201,168,76,.3));}
+.mode-suits{font-size:22px;letter-spacing:12px;opacity:.7;}
+.mode-suits span:nth-child(1),.mode-suits span:nth-child(2){color:#1a1a2e;filter:brightness(5);}
+.mode-suits span:nth-child(3),.mode-suits span:nth-child(4){color:#c0392b;}
+.mode-tagline{font-size:10px;letter-spacing:5px;color:rgba(201,168,76,.4);text-transform:uppercase;font-family:'Cinzel',serif;}
+.mode-cards{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
+.mode-card{
+  width:200px;padding:32px 24px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:20px;text-align:center;cursor:pointer;
+  transition:all .25s;backdrop-filter:blur(10px);
+  position:relative;overflow:hidden;
+}
+.mode-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,.35),transparent);}
+.mode-card:hover{border-color:rgba(201,168,76,.55);background:rgba(201,168,76,.08);
+  transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 20px rgba(201,168,76,.1);}
+.mode-card .mc-icon{font-size:44px;margin-bottom:14px;}
+.mode-card .mc-title{font-family:'Cinzel',serif;font-size:16px;color:var(--gold-l);
+  letter-spacing:1px;margin-bottom:8px;}
+.mode-card .mc-desc{font-size:11px;color:rgba(255,255,255,.35);line-height:1.6;letter-spacing:.3px;}
+
+/* CPU SETUP */
+#cpu-setup{
+  position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:24px;background:radial-gradient(ellipse at 50% 35%,#1e5c34 0%,#0e2a18 100%);z-index:210;
+}
+.cpu-box{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);border-radius:20px;
+  padding:36px 40px;width:380px;backdrop-filter:blur(10px);position:relative;overflow:hidden;text-align:center;}
+.cpu-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,.35),transparent);}
+.cpu-box h2{font-family:'Cinzel',serif;font-size:14px;color:var(--gold);letter-spacing:3px;margin-bottom:8px;}
+.cpu-box p{font-size:11px;color:rgba(255,255,255,.35);margin-bottom:24px;letter-spacing:.3px;}
+.cpu-count-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:28px;}
+.cpu-cnt-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--gold);
+  background:transparent;color:var(--gold);font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.cpu-cnt-btn:hover{background:rgba(201,168,76,.2);}
+.cpu-cnt-val{font-family:'Cinzel',serif;font-size:42px;color:var(--gold);min-width:60px;text-align:center;line-height:1;}
+.cpu-names{display:flex;flex-direction:column;gap:7px;margin-bottom:24px;max-height:220px;overflow-y:auto;}
+.cpu-names input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:9px 13px;color:var(--white);font-size:13px;outline:none;}
+.cpu-names input:focus{border-color:var(--gold);}
+.cpu-names input::placeholder{color:rgba(255,255,255,.25);}
+.btn-back{background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:10px;
+  padding:10px 20px;color:rgba(255,255,255,.45);font-size:12px;cursor:pointer;letter-spacing:1px;}
+.btn-back:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);}
+
 /* ══════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════ */
@@ -619,15 +680,63 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
 <body>
 
 <!-- ══════════════════════════════════════
-     LOBBY
+     MODE SELECT
 ══════════════════════════════════════ -->
-<div id="lobby">
+<div id="mode-select">
+  <div class="mode-hero">
+    <div class="mode-logo">Triple Ace</div>
+    <div class="mode-suits"><span>♠</span><span>♣</span><span>♥</span><span>♦</span></div>
+    <div class="mode-tagline">The Premium Card Game</div>
+  </div>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="showCpuSetup()">
+      <div class="mc-icon">🤖</div>
+      <div class="mc-title">Play with Computer</div>
+      <div class="mc-desc">Play solo against 1 to 9 CPU opponents on your device</div>
+    </div>
+    <div class="mode-card" onclick="showFriendsLobby()">
+      <div class="mc-icon">👥</div>
+      <div class="mc-title">Play with Friends</div>
+      <div class="mc-desc">Create a room or join with a 6-digit code. Play online together</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CPU SETUP
+══════════════════════════════════════ -->
+<div id="cpu-setup">
+  <div class="cpu-box">
+    <h2>Play with Computer</h2>
+    <p>Choose how many CPU opponents to play against</p>
+    <div class="l-field" style="margin-bottom:14px">
+      <label class="l-label">Your Name</label>
+      <input class="l-input" id="cpu-player-name" type="text" placeholder="e.g. Arjun" maxlength="20">
+    </div>
+    <div class="cpu-count-row">
+      <button class="cpu-cnt-btn" onclick="changeCpuCount(-1)">−</button>
+      <div class="cpu-cnt-val" id="cpu-cnt-val">1</div>
+      <button class="cpu-cnt-btn" onclick="changeCpuCount(1)">+</button>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:16px;letter-spacing:.3px">CPU Opponents: <span id="cpu-cnt-label">1</span> (1–9)</div>
+    <div class="cpu-names" id="cpu-name-inputs"></div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="btn-back" onclick="showModeSelect()">← Back</button>
+      <button class="btn-gold" style="flex:1" onclick="startCpuGame()">▶ Start Game</button>
+    </div>
+    <div class="l-error" id="cpu-error" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LOBBY (Friends / Online)
+══════════════════════════════════════ -->
+<div id="lobby" style="display:none">
   <div class="lobby-hero">
     <div class="lobby-logo">Triple Ace</div>
     <div class="lobby-suits"><span>♠</span><span>♣</span><span>♥</span><span>♦</span></div>
-    <div class="lobby-tagline">The Premium Card Game</div>
+    <div class="lobby-tagline">Play with Friends Online</div>
   </div>
-
   <div class="lobby-card">
     <div class="lc-title">Enter Your Name</div>
     <div class="l-field">
@@ -641,6 +750,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
       <input class="l-input code-input" id="l-code" type="text" placeholder="000000" maxlength="6">
     </div>
     <button class="btn-ghost" onclick="joinRoom()">→ Join Room</button>
+    <div style="margin-top:12px;text-align:center;">
+      <button class="btn-back" onclick="showModeSelect()">← Back</button>
+    </div>
     <div class="l-error" id="l-error"></div>
   </div>
 </div>
@@ -762,10 +874,38 @@ function cs(c){return c.v+c.s;}
 // ══════════════════════════════════════
 //  CLIENT STATE
 // ══════════════════════════════════════
-const socket = io();
+// Socket.io — robust connection
+const socket = io({
+  transports: ['websocket', 'polling'],
+  reconnection: true,
+  reconnectionAttempts: 10,
+  reconnectionDelay: 1500,
+  timeout: 10000
+});
+
 let myCode=null, myIndex=null, myName=null;
 let myHand=[], selectedVettuSuit=null;
-let state=null; // latest public game state
+let state=null;
+let connected=false;
+
+socket.on('connect', () => {
+  connected=true;
+  console.log('Connected to server:', socket.id);
+  const e=document.getElementById('l-error');
+  if(e&&(e.textContent.includes('server')||e.textContent.includes('connect')))e.style.display='none';
+});
+socket.on('disconnect', (reason) => {
+  connected=false;
+  showErr('Disconnected from server. Reconnecting… (' + reason + ')');
+});
+socket.on('connect_error', (err) => {
+  connected=false;
+  showErr('Cannot reach server: ' + err.message + '. Check server is running and port is open.');
+});
+socket.on('reconnect', () => {
+  connected=true;
+  showErr('');
+});
 
 // ══════════════════════════════════════
 //  LOBBY ACTIONS
@@ -777,8 +917,10 @@ function getName(){
 }
 function showErr(msg){
   const e=document.getElementById('l-error');
+  if(!msg){e.style.display='none';return;}
   e.textContent=msg;e.style.display='block';
-  setTimeout(()=>e.style.display='none',4000);
+  if(!msg.includes('Disconnected')&&!msg.includes('Cannot'))
+    setTimeout(()=>e.style.display='none',5000);
 }
 
 function createRoom(){
@@ -816,7 +958,7 @@ function confirmReveal(){
 }
 
 function leaveRoom(){
-  location.reload();
+  location.reload(); // simplest safe reset for both modes
 }
 
 function playAgain(){
@@ -829,10 +971,12 @@ function playAgain(){
 //  SCREEN HELPERS
 // ══════════════════════════════════════
 function showOnly(id){
-  ['lobby','waiting','reveal','game'].forEach(s=>{
+  ['mode-select','cpu-setup','lobby','waiting','reveal','game'].forEach(s=>{
     document.getElementById(s).style.display = s===id ? 'flex' : 'none';
   });
 }
+function showModeSelect(){ showOnly('mode-select'); }
+function showFriendsLobby(){ showOnly('lobby'); }
 function showWaiting(isHost){
   showOnly('waiting');
   document.getElementById('w-code').textContent=myCode;
@@ -1240,6 +1384,400 @@ socket.on('state', s=>{
 });
 
 window.addEventListener('resize',()=>{if(state)positionSeats(state);});
+
+// ══════════════════════════════════════════════════════════
+//  LOCAL "PLAY WITH COMPUTER" ENGINE
+//  Mirrors the server's state/event contract so the SAME
+//  renderGame(), renderReveal(), card click handlers, and
+//  vettu picker all work unchanged — just driven locally
+//  instead of via socket round-trips.
+// ══════════════════════════════════════════════════════════
+let gameMode = 'online'; // 'online' | 'cpu'
+let cpuCount = 1;
+const CPU_VALS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const CPU_VRANK={}; CPU_VALS.forEach((v,i)=>CPU_VRANK[v]=i+2);
+
+function cpuMkDeck(){const d=[];for(const s of SUITS)for(const v of CPU_VALS)d.push({s,v});return d;}
+function cpuShuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function cpuCmp(a,b){const vd=CPU_VRANK[a.v]-CPU_VRANK[b.v];return vd!==0?vd:SRANK[a.s]-SRANK[b.s];}
+function cpuBestOfHand(hand){return hand.reduce((b,c)=>cpuCmp(c,b)>0?c:b);}
+
+// ── CPU SETUP SCREEN ──
+function showCpuSetup(){
+  showOnly('cpu-setup');
+  gameMode='cpu';
+  renderCpuNameInputs();
+}
+function changeCpuCount(delta){
+  cpuCount=Math.max(1,Math.min(9,cpuCount+delta));
+  document.getElementById('cpu-cnt-val').textContent=cpuCount;
+  document.getElementById('cpu-cnt-label').textContent=cpuCount;
+  renderCpuNameInputs();
+}
+function renderCpuNameInputs(){
+  const c=document.getElementById('cpu-name-inputs');
+  const prev=Array.from(c.querySelectorAll('input')).map(i=>i.value);
+  c.innerHTML='';
+  for(let i=0;i<cpuCount;i++){
+    const inp=document.createElement('input');
+    inp.type='text'; inp.placeholder=`CPU Player ${i+1}`;
+    inp.value=prev[i]||'';
+    inp.dataset.cpuIdx=i;
+    c.appendChild(inp);
+  }
+}
+renderCpuNameInputs();
+
+function startCpuGame(){
+  const nameInput=document.getElementById('cpu-player-name');
+  const name=nameInput.value.trim();
+  if(!name){
+    const e=document.getElementById('cpu-error');
+    e.textContent='Please enter your name.'; e.style.display='block';
+    setTimeout(()=>e.style.display='none',4000);
+    return;
+  }
+  myName=name; myIndex=0;
+  const cpuNameInputs=Array.from(document.querySelectorAll('#cpu-name-inputs input'));
+  const cpuNames=cpuNameInputs.map((inp,i)=>inp.value.trim()||`CPU ${i+1}`);
+  cpuInitGame(name, cpuNames);
+}
+
+// ── LOCAL GAME STATE (CPU mode) ──
+let CG=null; // local CPU game object (mirrors server room shape internally)
+
+function cpuInitGame(humanName, cpuNames){
+  const deck=cpuShuffle(cpuMkDeck());
+  const allNames=[humanName, ...cpuNames];
+  const players=allNames.map((nm,i)=>({
+    name:nm, isHuman:i===0, hand:[], eliminated:false, finishRank:null, revealVal:null
+  }));
+
+  for(let i=0;i<3;i++) for(const p of players) if(deck.length) p.hand.push(deck.pop());
+
+  let first=0, bc=cpuBestOfHand(players[0].hand);
+  for(let i=1;i<players.length;i++){
+    const b=cpuBestOfHand(players[i].hand);
+    if(cpuCmp(b,bc)>0){bc=b; first=i;}
+  }
+
+  CG={
+    players, drawPile:deck,
+    currentPlayer:first,
+    roundCards:[], leadSuit:null, leadPid:null,
+    roundNum:1, phase:'reveal', totalDead:0, finishedCount:0,
+    roundEnded:false
+  };
+
+  const reveals=players.map((p,i)=>{
+    const hc=cpuBestOfHand(p.hand);
+    p.revealVal=hc.v;
+    return {name:p.name, val:hc.v, isFirst:i===first};
+  });
+
+  myHand=players[0].hand;
+  seatsBuilt=false;
+  showOnly('reveal');
+  renderReveal({reveals, firstPlayer:players[first].name, firstCard:cs(bc)});
+  // host = always confirm button visible in CPU mode
+  document.getElementById('btn-confirm-reveal').classList.remove('hidden');
+  document.getElementById('reveal-wait-hint').classList.add('hidden');
+}
+
+function cpuGetPublicState(){
+  return {
+    phase: CG.phase,
+    players: CG.players.map(p=>({
+      name:p.name, handCount:p.hand.length, eliminated:p.eliminated,
+      finishRank:p.finishRank, revealVal:p.revealVal
+    })),
+    drawPileCount: CG.drawPile.length,
+    roundCards: CG.roundCards,
+    leadSuit: CG.leadSuit,
+    leadPid: CG.leadPid,
+    currentPlayer: CG.currentPlayer,
+    roundNum: CG.roundNum,
+    totalDead: CG.totalDead,
+    roundEnded: CG.roundEnded,
+    highestPid: CG.roundCards.length>0 ? cpuGetCurrentHighestPid() : null
+  };
+}
+function cpuSendState(){
+  state=cpuGetPublicState();
+  if(state.phase==='playing'||state.phase==='ended') renderGame(state);
+}
+
+function cpuGetCurrentHighestPid(){
+  if(!CG.leadSuit||CG.roundCards.length===0) return CG.leadPid;
+  const lc=CG.roundCards.filter(rc=>!rc.isVettu&&rc.card.s===CG.leadSuit);
+  if(!lc.length) return CG.leadPid;
+  let best=lc[0];
+  for(const rc of lc) if(cpuCmp(rc.card,best.card)>0) best=rc;
+  return best.pid;
+}
+
+function cpuConfirmReveal(){
+  CG.phase='playing';
+  addLogEntry(`─── Round 1 ─── ${CG.players[CG.currentPlayer].name} leads.`,'le-r');
+  cpuSendState();
+  cpuScheduleNext();
+}
+
+function cpuPlayCardLocal(cardIndex){
+  if(!CG||CG.phase!=='playing'||CG.roundEnded) return {err:'Not playable'};
+  const pid=0;
+  if(CG.currentPlayer!==pid) return {err:'Not your turn'};
+  const player=CG.players[pid];
+  const card=player.hand[cardIndex];
+  if(!card) return {err:'Card not found'};
+  if(CG.leadSuit){
+    const hasSuit=player.hand.some(c=>c.s===CG.leadSuit);
+    if(hasSuit && card.s!==CG.leadSuit) return {err:`Must follow ${SNAME[CG.leadSuit]}`};
+    if(!hasSuit) return {err:'VETTU_REQUIRED'};
+  }
+  player.hand.splice(cardIndex,1);
+  if(CG.roundCards.length===0){CG.leadSuit=card.s; CG.leadPid=pid;}
+  CG.roundCards.push({pid, card, isVettu:false});
+  addLogEntry(`${player.name} plays ${cs(card)}`);
+  myHand=player.hand;
+  cpuSendState();
+
+  const active=CG.players.filter(p=>!p.eliminated);
+  const played=new Set(CG.roundCards.map(rc=>rc.pid));
+  if(played.size>=active.length){
+    setTimeout(cpuResolveRound,1200);
+  } else {
+    cpuNextActive();
+    cpuSendState();
+    cpuScheduleNext();
+  }
+  return {ok:true};
+}
+
+function cpuPlayVettuLocal(suit){
+  if(!CG||CG.phase!=='playing'||CG.roundEnded) return {err:'Not playable'};
+  const pid=0;
+  if(CG.currentPlayer!==pid) return {err:'Not your turn'};
+  if(!CG.leadSuit) return {err:'No lead suit yet'};
+  const player=CG.players[pid];
+  const hasSuit=player.hand.some(c=>c.s===CG.leadSuit);
+  if(hasSuit) return {err:`Must follow ${SNAME[CG.leadSuit]}, not vettu`};
+  const vc=player.hand.filter(c=>c.s===suit);
+  if(!vc.length) return {err:'No cards of that suit'};
+  player.hand=player.hand.filter(c=>c.s!==suit);
+  for(const c of vc) CG.roundCards.push({pid, card:c, isVettu:true});
+  addLogEntry(`${player.name} throws ${vc.length} ${SNAME[suit]} as VETTU → [${vc.map(cs).join(', ')}]`,'le-v');
+  CG.roundEnded=true;
+  myHand=player.hand;
+  cpuSendState();
+  setTimeout(cpuResolveRound,1200);
+  return {ok:true};
+}
+
+function cpuDoVettuAI(pid){
+  const player=CG.players[pid];
+  const groups={};
+  for(const c of player.hand){ if(c.s!==CG.leadSuit){ if(!groups[c.s])groups[c.s]=[]; groups[c.s].push(c);} }
+  let bSuit=null,bLen=0;
+  for(const sft in groups){ if(groups[sft].length>bLen){bLen=groups[sft].length; bSuit=sft;} }
+  if(!bSuit) return;
+  const vc=groups[bSuit];
+  player.hand=player.hand.filter(c=>c.s!==bSuit);
+  for(const c of vc) CG.roundCards.push({pid, card:c, isVettu:true});
+  addLogEntry(`${player.name} has no ${SNAME[CG.leadSuit]} — throws ${vc.length} ${SNAME[bSuit]} as VETTU: [${vc.map(cs).join(', ')}]`,'le-v');
+  CG.roundEnded=true;
+  cpuSendState();
+  setTimeout(cpuResolveRound,1200);
+}
+
+function cpuResolveRound(){
+  if(!CG||CG.phase==='ended') return;
+  const hadVettu=CG.roundCards.some(rc=>rc.isVettu);
+  const highestPid=cpuGetCurrentHighestPid();
+  const highestPlayer=CG.players[highestPid];
+
+  if(hadVettu){
+    const allCards=CG.roundCards.map(rc=>rc.card);
+    for(const c of allCards) highestPlayer.hand.push(c);
+    addLogEntry(`🔴 VETTU! ALL ${allCards.length} card(s) → ${highestPlayer.name}'s hand (punishment).`,'le-v');
+    showFlash(`🔴 VETTU! All cards → ${highestPlayer.name}'s hand!`);
+  } else {
+    CG.totalDead+=CG.roundCards.length;
+    addLogEntry(`✅ Clean round. ${CG.roundCards.length} card(s) → 💀 dead pile.`,'le-d');
+  }
+  addLogEntry(`${highestPlayer.name} leads next round.`,'le-r');
+
+  CG.roundCards=[]; CG.leadSuit=null; CG.leadPid=null;
+  CG.roundEnded=false; CG.currentPlayer=highestPid; CG.roundNum++;
+
+  for(const p of CG.players){
+    if(!p.eliminated && p.hand.length===0 && CG.drawPile.length>0){
+      const n=Math.min(3,CG.drawPile.length);
+      p.hand.push(...CG.drawPile.splice(0,n));
+      addLogEntry(`${p.name} draws ${n} card(s). (${CG.drawPile.length} left)`);
+    }
+  }
+
+  for(const p of CG.players){
+    if(!p.eliminated && p.hand.length===0 && CG.drawPile.length===0 && p.finishRank===null){
+      p.eliminated=true; p.finishRank=++CG.finishedCount;
+      if(CG.finishedCount===1){
+        addLogEntry(`🏆 ${p.name} WINS!`,'le-w');
+        CG.phase='ended';
+        myHand=CG.players[0].hand;
+        cpuSendState();
+        cpuShowGameOver(p);
+        return;
+      }
+      addLogEntry(`${p.name} finishes at rank #${p.finishRank}.`);
+    }
+  }
+
+  const still=CG.players.filter(p=>!p.eliminated);
+  if(still.length<=1){
+    if(still.length===1 && still[0].finishRank===null){
+      still[0].eliminated=true; still[0].finishRank=++CG.finishedCount;
+    }
+    const winner=CG.players.find(p=>p.finishRank===1)||CG.players[0];
+    CG.phase='ended';
+    myHand=CG.players[0].hand;
+    cpuSendState();
+    cpuShowGameOver(winner);
+    return;
+  }
+
+  if(CG.players[CG.currentPlayer].eliminated){
+    const n=CG.players.length; let next=(CG.currentPlayer+1)%n;
+    while(CG.players[next].eliminated) next=(next+1)%n;
+    CG.currentPlayer=next;
+  }
+
+  addLogEntry(`─── Round ${CG.roundNum} ─── ${CG.players[CG.currentPlayer].name} leads.`,'le-r');
+  myHand=CG.players[0].hand;
+  cpuSendState();
+  cpuScheduleNext();
+}
+
+function cpuNextActive(){
+  const n=CG.players.length; let next=(CG.currentPlayer+1)%n;
+  while(CG.players[next].eliminated) next=(next+1)%n;
+  CG.currentPlayer=next;
+}
+
+function cpuScheduleNext(){
+  if(!CG||CG.phase!=='playing'||CG.roundEnded) return;
+  if(CG.currentPlayer===0) return; // human's turn, wait for click
+  setTimeout(()=>{ if(CG && CG.phase==='playing' && !CG.roundEnded) cpuAiPlay(CG.currentPlayer); },900+Math.random()*500);
+}
+
+function cpuAiPlay(pid){
+  if(!CG||CG.phase!=='playing'||CG.currentPlayer!==pid||CG.roundEnded) return;
+  const p=CG.players[pid];
+  if(!p||p.hand.length===0) return;
+  if(CG.leadSuit){
+    const sc=p.hand.filter(c=>c.s===CG.leadSuit);
+    if(sc.length>0){
+      const sorted=[...sc].sort((a,b)=>cpuCmp(a,b));
+      const idx=p.hand.indexOf(sorted[0]);
+      cpuPlayOneAi(pid, idx);
+    } else {
+      cpuDoVettuAI(pid);
+    }
+  } else {
+    const sorted=[...p.hand].sort((a,b)=>cpuCmp(a,b));
+    const idx=p.hand.indexOf(sorted[0]);
+    cpuPlayOneAi(pid, idx);
+  }
+}
+
+function cpuPlayOneAi(pid, cardIndex){
+  const player=CG.players[pid];
+  const card=player.hand.splice(cardIndex,1)[0];
+  if(CG.roundCards.length===0){ CG.leadSuit=card.s; CG.leadPid=pid; }
+  CG.roundCards.push({pid, card, isVettu:false});
+  addLogEntry(`${player.name} plays ${cs(card)}`);
+  cpuSendState();
+
+  const active=CG.players.filter(p=>!p.eliminated);
+  const played=new Set(CG.roundCards.map(rc=>rc.pid));
+  if(played.size>=active.length){
+    setTimeout(cpuResolveRound,1200);
+  } else {
+    cpuNextActive();
+    cpuSendState();
+    cpuScheduleNext();
+  }
+}
+
+function cpuShowGameOver(winner){
+  document.getElementById('win-name').textContent=winner.name;
+  const sc=document.getElementById('win-scores'); sc.innerHTML='';
+  const ranked=[...CG.players].sort((a,b)=>(a.finishRank||99)-(b.finishRank||99));
+  for(const p of ranked){
+    const r=document.createElement('div'); r.className='srow';
+    r.innerHTML=`<span class="rnk">#${p.finishRank||'?'}</span><span>${esc(p.name)}</span><span style="color:rgba(255,255,255,.25)">${p.hand.length} cards left</span>`;
+    sc.appendChild(r);
+  }
+  document.getElementById('btn-play-again').classList.remove('hidden');
+  document.getElementById('win-modal').classList.remove('hidden');
+}
+
+function cpuPlayAgain(){
+  document.getElementById('win-modal').classList.add('hidden');
+  showOnly('cpu-setup');
+}
+
+// ── Build CPU seats once reveal confirmed (reuses buildSeats/positionSeats) ──
+const _origConfirmReveal = confirmReveal;
+function confirmRevealDispatch(){
+  if(gameMode==='cpu'){ cpuConfirmReveal(); }
+  else { _origConfirmReveal(); }
+}
+document.getElementById('btn-confirm-reveal').setAttribute('onclick','confirmRevealDispatch()');
+
+// ── Override leaveRoom/playAgain to route correctly ──
+const _origLeaveRoom = leaveRoom;
+leaveRoom = function(){ location.reload(); };
+
+const _origPlayAgain = playAgain;
+function playAgainDispatch(){
+  if(gameMode==='cpu'){ cpuPlayAgain(); }
+  else { _origPlayAgain(); }
+}
+document.getElementById('btn-play-again').setAttribute('onclick','playAgainDispatch()');
+
+// ── Route card play / vettu through correct mode ──
+const _origDoPlayCard = doPlayCard;
+doPlayCard = function(cardIndex){
+  if(gameMode==='cpu'){
+    const res=cpuPlayCardLocal(cardIndex);
+    if(res&&res.err && res.err!=='VETTU_REQUIRED') setStat(res.err,'');
+  } else {
+    _origDoPlayCard(cardIndex);
+  }
+};
+
+const _origConfirmVettu = confirmVettu;
+confirmVettu = function(){
+  if(gameMode==='cpu'){
+    if(!selectedVettuSuit) return;
+    const res=cpuPlayVettuLocal(selectedVettuSuit);
+    if(res&&res.err) setStat(res.err,'');
+    else selectedVettuSuit=null;
+  } else {
+    _origConfirmVettu();
+  }
+};
+
+// ── Build seats for CPU mode too (reuse buildSeats which reads state.players) ──
+const _origRenderGame = renderGame;
+renderGame = function(s){
+  if(gameMode==='cpu' && !seatsBuilt && s.players){
+    // reuse existing buildSeats() but it expects s.players with .name only — already matches
+    buildSeats(s); seatsBuilt=true;
+  }
+  _origRenderGame(s);
+};
 </script>
 </body>
 </html>

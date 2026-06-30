@@ -9,10 +9,29 @@ const path    = require('path');
 const app    = express();
 const server = http.createServer(app);
 const io     = new Server(server, {
-  cors: { origin: '*', methods: ['GET','POST'] }
+  cors: {
+    origin: '*',
+    methods: ['GET','POST'],
+    credentials: false
+  },
+  // Allow both WebSocket and long-polling (fallback)
+  transports: ['websocket', 'polling'],
+  allowEIO3: true,
+  pingTimeout: 60000,
+  pingInterval: 25000
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ── Health check endpoint ──
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),
+    rooms: rooms.size,
+    timestamp: new Date().toISOString()
+  });
+});
 
 const PORT = process.env.PORT || 3000;
 
@@ -467,6 +486,8 @@ io.on('connection', socket => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`\n🃏 Triple Ace server running on http://localhost:${PORT}\n`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🃏 Triple Ace server running on port ${PORT}`);
+  console.log(`🌐 Platform: ${process.env.RAILWAY_ENVIRONMENT || 'local'}`);
+  console.log(`📡 Socket.io ready for WebSocket connections\n`);
 });

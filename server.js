@@ -286,36 +286,31 @@ function resolveRound(room) {
     }
   }
 
-  // Check win
+  // Players who empty their hand finish in order, but the game does NOT
+  // end at the first finisher — it continues until only ONE player remains.
+  // That last remaining player is the LOSER. Everyone else is ranked
+  // 1st, 2nd, 3rd... by the order they emptied their hand.
   for (const p of room.players) {
     if (!p.eliminated && p.hand.length===0 && room.drawPile.length===0 && p.finishRank===null) {
       p.eliminated = true;
       p.finishRank = ++room.finishedCount;
-      if (room.finishedCount===1) {
-        addLog(room, `🏆 ${p.name} WINS!`, 'le-w');
-        room.phase = 'ended';
-        sendState(room);
-        roomBroadcast(room, 'gameOver', {
-          winner: p.name,
-          ranks: [...room.players].sort((a,b)=>(a.finishRank||99)-(b.finishRank||99))
-            .map(pl=>({name:pl.name,rank:pl.finishRank||null,handLeft:pl.hand.length}))
-        });
-        return;
-      }
-      addLog(room, `${p.name} finishes at rank #${p.finishRank}.`);
+      addLog(room, `🏆 ${p.name} finishes at rank #${p.finishRank}.`, 'le-w');
     }
   }
 
   const still = room.players.filter(p=>!p.eliminated);
   if (still.length<=1) {
+    // Exactly one player left → they are the LOSER (gets the last rank)
     if (still.length===1 && still[0].finishRank===null) {
-      still[0].eliminated=true; still[0].finishRank=++room.finishedCount;
+      still[0].eliminated=true;
+      still[0].finishRank=++room.finishedCount;
+      addLog(room, `💀 ${still[0].name} is the LAST remaining player — LOSER!`, 'le-v');
     }
-    const winner = room.players.find(p=>p.finishRank===1)||room.players[0];
+    const champion = room.players.find(p=>p.finishRank===1)||room.players[0];
     room.phase = 'ended';
     sendState(room);
     roomBroadcast(room, 'gameOver', {
-      winner: winner.name,
+      winner: champion.name,
       ranks: [...room.players].sort((a,b)=>(a.finishRank||99)-(b.finishRank||99))
         .map(pl=>({name:pl.name,rank:pl.finishRank||null,handLeft:pl.hand.length}))
     });

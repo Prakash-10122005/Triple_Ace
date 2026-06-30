@@ -846,7 +846,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
     <div class="trophy">🏆</div>
     <h2>Winner</h2>
     <div class="wname" id="win-name">—</div>
-    <p>First to empty their hand wins!</p>
+    <p>Game over — final standings below. Last place is the loser!</p>
     <div class="score-list" id="win-scores"></div>
     <button class="btn-gold" id="btn-play-again" style="margin-top:16px" onclick="playAgain()">Play Again</button>
     <button class="btn-ghost" onclick="leaveRoom()" style="margin-top:8px">Leave Room</button>
@@ -1011,9 +1011,11 @@ socket.on('log', entry => {
 socket.on('gameOver', data => {
   document.getElementById('win-name').textContent = data.winner;
   const sc=document.getElementById('win-scores'); sc.innerHTML='';
+  const maxRank = Math.max(...data.ranks.map(p=>p.rank||0));
   for(const p of data.ranks){
+    const isLoser = p.rank===maxRank;
     const r=document.createElement('div');r.className='srow';
-    r.innerHTML=`<span class="rnk">#${p.rank||'?'}</span><span>${esc(p.name)}</span><span style="color:rgba(255,255,255,.25)">${p.handLeft} cards left</span>`;
+    r.innerHTML=`<span class="rnk">#${p.rank||'?'}</span><span>${esc(p.name)}${isLoser?' <span style="color:#ff8888;font-size:10px">💀 LOSER</span>':(p.rank===1?' <span style="color:var(--gold);font-size:10px">🏆 WINNER</span>':'')}</span><span style="color:rgba(255,255,255,.25)">${p.handLeft} cards left</span>`;
     sc.appendChild(r);
   }
   // Only host sees play again
@@ -1155,6 +1157,7 @@ function renderGame(s){
     if(isPunished) tags+=`<span class="stag stag-punish">VETTU RECV</span>`;
     if(isSkipped)  tags+=`<span class="stag stag-skip">SKIPPED</span>`;
     if(p.finishRank===1) tags+=`<span class="stag stag-fin">🏆</span>`;
+    if(s.phase==='ended' && p.finishRank && p.finishRank===s.players.length) tags+=`<span class="stag stag-punish">💀 LOSER</span>`;
 
     const revTag = s.roundNum===1 && p.revealVal ? `<div class="seat-rev">Said: ${p.revealVal}</div>` : '';
     seat.innerHTML=`
@@ -1186,6 +1189,8 @@ function renderGame(s){
   if(s.highestPid===myIndex && hadVettu) ht.innerHTML+=`<span class="stag stag-punish">VETTU RECV</span>`;
   if(skippedPids.has(myIndex)) ht.innerHTML+=`<span class="stag stag-skip">SKIPPED</span>`;
   if(me.finishRank===1) ht.innerHTML+=`<span class="stag stag-fin">🏆 WINNER</span>`;
+  if(s.phase==='ended' && me.finishRank && me.finishRank===s.players.length) ht.innerHTML+=`<span class="stag stag-punish">💀 LOSER</span>`;
+  else if(s.phase==='ended' && me.finishRank && me.finishRank>1) ht.innerHTML+=`<span class="stag stag-skip">Finished #${me.finishRank}</span>`;
 
   // Vettu picker
   const noSuit = s.leadSuit && !myHand.some(c=>c.s===s.leadSuit);
@@ -1621,28 +1626,22 @@ function cpuResolveRound(){
   for(const p of CG.players){
     if(!p.eliminated && p.hand.length===0 && CG.drawPile.length===0 && p.finishRank===null){
       p.eliminated=true; p.finishRank=++CG.finishedCount;
-      if(CG.finishedCount===1){
-        addLogEntry(`🏆 ${p.name} WINS!`,'le-w');
-        CG.phase='ended';
-        myHand=CG.players[0].hand;
-        cpuSendState();
-        cpuShowGameOver(p);
-        return;
-      }
-      addLogEntry(`${p.name} finishes at rank #${p.finishRank}.`);
+      addLogEntry(`🏆 ${p.name} finishes at rank #${p.finishRank}.`,'le-w');
     }
   }
 
   const still=CG.players.filter(p=>!p.eliminated);
   if(still.length<=1){
     if(still.length===1 && still[0].finishRank===null){
-      still[0].eliminated=true; still[0].finishRank=++CG.finishedCount;
+      still[0].eliminated=true;
+      still[0].finishRank=++CG.finishedCount;
+      addLogEntry(`💀 ${still[0].name} is the LAST remaining player — LOSER!`,'le-v');
     }
-    const winner=CG.players.find(p=>p.finishRank===1)||CG.players[0];
     CG.phase='ended';
     myHand=CG.players[0].hand;
     cpuSendState();
-    cpuShowGameOver(winner);
+    const champion=CG.players.find(p=>p.finishRank===1)||CG.players[0];
+    cpuShowGameOver(champion);
     return;
   }
 
@@ -1713,9 +1712,11 @@ function cpuShowGameOver(winner){
   document.getElementById('win-name').textContent=winner.name;
   const sc=document.getElementById('win-scores'); sc.innerHTML='';
   const ranked=[...CG.players].sort((a,b)=>(a.finishRank||99)-(b.finishRank||99));
+  const maxRank = Math.max(...ranked.map(p=>p.finishRank||0));
   for(const p of ranked){
+    const isLoser = p.finishRank===maxRank;
     const r=document.createElement('div'); r.className='srow';
-    r.innerHTML=`<span class="rnk">#${p.finishRank||'?'}</span><span>${esc(p.name)}</span><span style="color:rgba(255,255,255,.25)">${p.hand.length} cards left</span>`;
+    r.innerHTML=`<span class="rnk">#${p.finishRank||'?'}</span><span>${esc(p.name)}${isLoser?' <span style="color:#ff8888;font-size:10px">💀 LOSER</span>':(p.finishRank===1?' <span style="color:var(--gold);font-size:10px">🏆 WINNER</span>':'')}</span><span style="color:rgba(255,255,255,.25)">${p.hand.length} cards left</span>`;
     sc.appendChild(r);
   }
   document.getElementById('btn-play-again').classList.remove('hidden');

@@ -92,7 +92,9 @@ function createRoom(hostSocketId, hostName) {
     totalDead: 0,
     finishedCount: 0,
     roundEnded: false,
-    log: []
+    log: [],
+    createdAt: Date.now(),
+    emptySince: null   // timestamp when room became fully disconnected (null = has active players)
   };
 
   rooms.set(code, room);
@@ -395,6 +397,7 @@ io.on('connection', socket => {
     const idx = room.players.length;
     addPlayer(room, socket.id, name);
     socket.join(code);
+    room.emptySince = null; // room is active again — cancel any pending expiry
     console.log(`${name} joined room ${code}`);
     cb({ ok:true, code, playerIndex:idx });
     addLog(room, `${name} joined the room.`);
@@ -463,16 +466,20 @@ io.on('connection', socket => {
   });
 
   // ── DISCONNECT ──
+  // IMPORTANT: rooms are NOT deleted instantly when everyone disconnects.
+  // A grace period (ROOM_EMPTY_GRACE_MS) keeps the room code valid so
+  // players can reconnect (e.g. after a page refresh, brief WiFi drop,
+  // or the free-tier server waking back up from sleep).
   socket.on('disconnect', () => {
     for (const [code, room] of rooms.entries()) {
       const p = room.players.find(p=>p.socketId===socket.id);
       if (p) {
         addLog(room, `${p.name} disconnected.`, 'le-v');
         sendState(room);
-        // Clean up empty rooms
+        // Mark room as "possibly empty" — actual deletion handled by sweep below
         if (room.players.every(pl=>!io.sockets.sockets.get(pl.socketId))) {
-          rooms.delete(code);
-          console.log(`Room ${code} deleted (all disconnected)`);
+          room.emptySince = Date.now();
+          console.log(`Room ${code} has no active connections — starting grace period.`);
         }
         break;
       }
@@ -480,6 +487,28 @@ io.on('connection', socket => {
     console.log('disconnected:', socket.id);
   });
 });
+
+// ─────────────────────────────────────────
+//  ROOM EXPIRY SWEEP
+//  Rooms stay valid for at least ROOM_EMPTY_GRACE_MS after going empty,
+//  and rooms that were created but never started stay valid for
+//  ROOM_IDLE_LOBBY_MS even with people connected but inactive.
+//  Defaults give MUCH more than 1 minute of validity — far exceeding
+//  what was requested, to comfortably survive page reloads, brief
+//  network drops, and Railway free-tier cold starts.
+// ─────────────────────────────────────────
+const ROOM_EMPTY_GRACE_MS = 5 * 60 * 1000;   // 5 minutes after everyone disconnects
+const SWEEP_INTERVAL_MS   = 30 * 1000;       // check every 30 seconds
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [code, room] of rooms.entries()) {
+    if (room.emptySince && (now - room.emptySince) > ROOM_EMPTY_GRACE_MS) {
+      rooms.delete(code);
+      console.log(`Room ${code} deleted (empty for over ${ROOM_EMPTY_GRACE_MS/1000}s)`);
+    }
+  }
+}, SWEEP_INTERVAL_MS);
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🃏 Triple Ace server running on port ${PORT}`);

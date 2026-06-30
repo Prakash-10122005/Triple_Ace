@@ -611,7 +611,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
 ══════════════════════════════════════ */
 #mode-select{
   position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:28px;background:radial-gradient(ellipse at 50% 35%,#1e5c34 0%,#0e2a18 100%);z-index:210;
+  gap:28px;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(201,168,76,.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(201,168,76,.04) 0%, transparent 50%),
+    linear-gradient(180deg,#080808 0%,#0a1208 50%,#080808 100%);
+  z-index:210;
 }
 .mode-hero{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .mode-logo{font-family:'Cinzel',serif;font-size:50px;font-weight:900;color:transparent;
@@ -643,7 +648,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
 /* CPU SETUP */
 #cpu-setup{
   position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:24px;background:radial-gradient(ellipse at 50% 35%,#1e5c34 0%,#0e2a18 100%);z-index:210;
+  gap:24px;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(201,168,76,.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(201,168,76,.04) 0%, transparent 50%),
+    linear-gradient(180deg,#080808 0%,#0a1208 50%,#080808 100%);
+  z-index:210;
 }
 .cpu-box{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);border-radius:20px;
   padding:36px 40px;width:380px;backdrop-filter:blur(10px);position:relative;overflow:hidden;text-align:center;}
@@ -665,6 +675,26 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
 .btn-back{background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:10px;
   padding:10px 20px;color:rgba(255,255,255,.45);font-size:12px;cursor:pointer;letter-spacing:1px;}
 .btn-back:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);}
+
+/* Floating symbol-only back arrow — top-left corner of any screen */
+.back-arrow-btn{
+  position:fixed;top:20px;left:20px;z-index:250;
+  width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(201,168,76,.22);
+  color:var(--gold-l);
+  font-size:18px;cursor:pointer;
+  transition:all .2s;
+  backdrop-filter:blur(8px);
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+.back-arrow-btn:hover{
+  background:rgba(201,168,76,.12);
+  border-color:rgba(201,168,76,.5);
+  color:var(--gold-xl);
+  transform:translateX(-3px);
+}
 
 /* ══════════════════════════════════════
    RESPONSIVE
@@ -706,6 +736,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
      CPU SETUP
 ══════════════════════════════════════ -->
 <div id="cpu-setup">
+  <button class="back-arrow-btn" onclick="showModeSelect()" title="Back to mode selection">←</button>
   <div class="cpu-box">
     <h2>Play with Computer</h2>
     <p>Choose how many CPU opponents to play against</p>
@@ -720,10 +751,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
     </div>
     <div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:16px;letter-spacing:.3px">CPU Opponents: <span id="cpu-cnt-label">1</span> (1–9)</div>
     <div class="cpu-names" id="cpu-name-inputs"></div>
-    <div style="display:flex;gap:10px;margin-top:4px;">
-      <button class="btn-back" onclick="showModeSelect()">← Back</button>
-      <button class="btn-gold" style="flex:1" onclick="startCpuGame()">▶ Start Game</button>
-    </div>
+    <button class="btn-gold" style="margin-top:4px" onclick="startCpuGame()">▶ Start Game</button>
     <div class="l-error" id="cpu-error" style="margin-top:10px"></div>
   </div>
 </div>
@@ -732,6 +760,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
      LOBBY (Friends / Online)
 ══════════════════════════════════════ -->
 <div id="lobby" style="display:none">
+  <button class="back-arrow-btn" onclick="showModeSelect()" title="Back to mode selection">←</button>
   <div class="lobby-hero">
     <div class="lobby-logo">Triple Ace</div>
     <div class="lobby-suits"><span>♠</span><span>♣</span><span>♥</span><span>♦</span></div>
@@ -750,9 +779,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
       <input class="l-input code-input" id="l-code" type="text" placeholder="000000" maxlength="6">
     </div>
     <button class="btn-ghost" onclick="joinRoom()">→ Join Room</button>
-    <div style="margin-top:12px;text-align:center;">
-      <button class="btn-back" onclick="showModeSelect()">← Back</button>
-    </div>
     <div class="l-error" id="l-error"></div>
   </div>
 </div>
@@ -761,6 +787,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-fa
      WAITING ROOM
 ══════════════════════════════════════ -->
 <div id="waiting" style="display:none">
+  <button class="back-arrow-btn" onclick="leaveRoom()" title="Leave room and go back">←</button>
   <div class="wait-code-box">
     <div class="wait-code-label">Room Code</div>
     <div class="wait-code" id="w-code">——</div>

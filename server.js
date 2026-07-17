@@ -21,7 +21,8 @@ const io     = new Server(server, {
   pingInterval: 25000
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from the root folder (no public/ subfolder needed)
+app.use(express.static(__dirname));
 
 // ── Health check endpoint ──
 app.get('/health', (req, res) => {

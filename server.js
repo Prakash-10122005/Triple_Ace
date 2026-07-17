@@ -14,15 +14,21 @@ const io     = new Server(server, {
     methods: ['GET','POST'],
     credentials: false
   },
-  // Allow both WebSocket and long-polling (fallback)
-  transports: ['websocket', 'polling'],
+  // polling first so Render.com can handshake, then upgrade to WebSocket
+  transports: ['polling', 'websocket'],
+  allowUpgrades: true,
   allowEIO3: true,
   pingTimeout: 60000,
   pingInterval: 25000
 });
 
-// Serve static files from the root folder (no public/ subfolder needed)
+// Serve all static files from root directory
 app.use(express.static(__dirname));
+
+const PORT = process.env.PORT || 3000;
+
+// ── Rooms Map — defined before health endpoint so it can reference it ──
+const rooms = new Map();
 
 // ── Health check endpoint ──
 app.get('/health', (req, res) => {
@@ -33,8 +39,6 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
-
-const PORT = process.env.PORT || 3000;
 
 // ─────────────────────────────────────────
 //  CONSTANTS
@@ -73,8 +77,6 @@ function genCode() {
 // ─────────────────────────────────────────
 //  ROOMS  Map<code, RoomState>
 // ─────────────────────────────────────────
-const rooms = new Map();
-
 function createRoom(hostSocketId, hostName) {
   let code;
   do { code = genCode(); } while (rooms.has(code));

@@ -915,7 +915,7 @@ var CG=null;
 // Socket.io — Render.com compatible setup
 // Polling first, then upgrades to websocket
 // ══════════════════════════════════════
-const socket = io({
+var socket = io({
   transports: ['polling', 'websocket'],
   upgrade: true,
   reconnection: true,

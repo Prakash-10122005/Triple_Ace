@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<link rel="manifest" href="manifest.json">
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Triple Ace</title>
-<script src="/socket.io/socket.io.js"></script>
+<!-- Load Socket.io from CDN — avoids 404 issues on Render.com -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQbl" crossorigin="anonymous"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap');
 
@@ -900,21 +900,30 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function cs(c){return c.v+c.s;}
 
 // ══════════════════════════════════════
-//  CLIENT STATE
+//  CLIENT STATE — declare ALL variables first
 // ══════════════════════════════════════
-// Socket.io — robust connection
-const socket = io({
-  transports: ['websocket', 'polling'],
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1500,
-  timeout: 10000
-});
-
 let myCode=null, myIndex=null, myName=null;
 let myHand=[], selectedVettuSuit=null;
 let state=null;
 let connected=false;
+let seatsBuilt=false;
+let gameMode='online';
+let cpuCount=1;
+let CG=null;
+
+// ══════════════════════════════════════
+// Socket.io — Render.com compatible setup
+// Polling first, then upgrades to websocket
+// ══════════════════════════════════════
+const socket = io({
+  transports: ['polling', 'websocket'],
+  upgrade: true,
+  reconnection: true,
+  reconnectionAttempts: 15,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  timeout: 20000
+});
 
 socket.on('connect', () => {
   connected=true;
@@ -952,6 +961,10 @@ function showErr(msg){
 }
 
 function createRoom(){
+  if(!connected){
+    showErr('Connecting to server… please wait a moment and try again.');
+    return;
+  }
   const name=getName();if(!name)return;
   myName=name;
   socket.emit('createRoom',{name},(res)=>{
@@ -962,6 +975,10 @@ function createRoom(){
 }
 
 function joinRoom(){
+  if(!connected){
+    showErr('Connecting to server… please wait a moment and try again.');
+    return;
+  }
   const name=getName();if(!name)return;
   const code=document.getElementById('l-code').value.trim();
   if(code.length!==6||!/^\d+$/.test(code))return showErr('Enter a valid 6-digit code.');
@@ -1407,7 +1424,6 @@ document.addEventListener('keydown',e=>{
 });
 
 // Rebuild seats when state first arrives with player list
-let seatsBuilt=false;
 const _origState = socket.listeners('state')[0];
 socket.on('state', s=>{
   if((s.phase==='playing'||s.phase==='ended') && !seatsBuilt && myIndex!==null){
@@ -1425,8 +1441,6 @@ window.addEventListener('resize',()=>{if(state)positionSeats(state);});
 //  vettu picker all work unchanged — just driven locally
 //  instead of via socket round-trips.
 // ══════════════════════════════════════════════════════════
-let gameMode = 'online'; // 'online' | 'cpu'
-let cpuCount = 1;
 const CPU_VALS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
 const CPU_VRANK={}; CPU_VALS.forEach((v,i)=>CPU_VRANK[v]=i+2);
 
@@ -1477,7 +1491,6 @@ function startCpuGame(){
 }
 
 // ── LOCAL GAME STATE (CPU mode) ──
-let CG=null; // local CPU game object (mirrors server room shape internally)
 
 function cpuInitGame(humanName, cpuNames){
   const deck=cpuShuffle(cpuMkDeck());

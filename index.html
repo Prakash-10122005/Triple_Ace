@@ -900,16 +900,16 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function cs(c){return c.v+c.s;}
 
 // ══════════════════════════════════════
-//  CLIENT STATE — declare ALL variables first
+//  CLIENT STATE — use var for global accessibility from onclick handlers
 // ══════════════════════════════════════
-let myCode=null, myIndex=null, myName=null;
-let myHand=[], selectedVettuSuit=null;
-let state=null;
-let connected=false;
-let seatsBuilt=false;
-let gameMode='online';
-let cpuCount=1;
-let CG=null;
+var myCode=null, myIndex=null, myName=null;
+var myHand=[], selectedVettuSuit=null;
+var state=null;
+var connected=false;
+var seatsBuilt=false;
+var gameMode='online';
+var cpuCount=1;
+var CG=null;
 
 // ══════════════════════════════════════
 // Socket.io — Render.com compatible setup

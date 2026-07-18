@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Triple Ace</title>
 <!-- Load Socket.io from CDN — avoids 404 issues on Render.com -->
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQbl" crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap');
 
@@ -900,7 +900,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function cs(c){return c.v+c.s;}
 
 // ══════════════════════════════════════
-//  CLIENT STATE — use var for global accessibility from onclick handlers
+//  CLIENT STATE — var = accessible from onclick handlers
 // ══════════════════════════════════════
 var myCode=null, myIndex=null, myName=null;
 var myHand=[], selectedVettuSuit=null;
@@ -912,8 +912,8 @@ var cpuCount=1;
 var CG=null;
 
 // ══════════════════════════════════════
-// Socket.io — Render.com compatible setup
-// Polling first, then upgrades to websocket
+// Socket.io — connects to our Node.js server
+// polling first = works on Render.com and Railway
 // ══════════════════════════════════════
 var socket = io({
   transports: ['polling', 'websocket'],

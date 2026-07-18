@@ -900,7 +900,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function cs(c){return c.v+c.s;}
 
 // ══════════════════════════════════════
-//  CLIENT STATE — var = accessible from onclick handlers
+//  CLIENT STATE — use var for global accessibility from onclick handlers
 // ══════════════════════════════════════
 var myCode=null, myIndex=null, myName=null;
 var myHand=[], selectedVettuSuit=null;
@@ -912,8 +912,8 @@ var cpuCount=1;
 var CG=null;
 
 // ══════════════════════════════════════
-// Socket.io — connects to our Node.js server
-// polling first = works on Render.com and Railway
+// Socket.io — Render.com compatible setup
+// Polling first, then upgrades to websocket
 // ══════════════════════════════════════
 var socket = io({
   transports: ['polling', 'websocket'],
